@@ -1,0 +1,279 @@
+LTools.Workflow.PrimoApp.AddToLog(_Workflow, "OCR. Mapping", LTools.Enums.LogMessageType.Info);
+
+//Поиск получателя в 1С (MAPPING)
+
+if(true)
+{
+
+string Text_in = TempPoluchatel; // "фск Технологии";
+
+     Text_in =  System.Text.RegularExpressions.Regex.Replace(Text_in, "(?<=^|[^а-яА-ЯЁё])лсо(?=$|[^а-яА-ЯЁё])", "Лидер строительной отрасли", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   //Режем лишнее
+     Text_in =  System.Text.RegularExpressions.Regex.Replace(Text_in, "(?<=^|[^а-яА-ЯЁё])Финансово.строительная корпорация(?=$|[^а-яА-ЯЁё])", "ФСК", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   //Режем лишнее|
+     Text_in =  System.Text.RegularExpressions.Regex.Replace(Text_in, "(СЗ|C3|С3)", " СЗ ", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   //Режем лишнее|
+     Text_in =  System.Text.RegularExpressions.Regex.Replace(Text_in, "СПЕЦИАЛИЗИРОВАННЫЙ ЗАСТРОЙЩИК", " СЗ ", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   //Режем лишнее
+     Text_in =  System.Text.RegularExpressions.Regex.Replace(Text_in, "Судебная повестка по гражданскому делу|Судебная повестка по гражданскому|Судебная повестка", " ", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   //Режем лишнее|
+     Text_in =  System.Text.RegularExpressions.Regex.Replace(Text_in, "КиноДеволонмент", " КиноДеволопмент ", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   //Режем лишнее
+     Text_in =  System.Text.RegularExpressions.Regex.Replace(Text_in, "Арендное ремонтно.строительное предприятие", "АРСП", System.Text.RegularExpressions.RegexOptions.IgnoreCase);  
+     Text_in = Text_in .Replace("-"," "); // замена - на пробел
+     Text_in =  System.Text.RegularExpressions.Regex.Replace(Text_in, "[^А-Яа-яЁё0-9 ]+", " ", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   //Минимизация символов
+     Text_in =  System.Text.RegularExpressions.Regex.Replace(Text_in, " +", " ", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   //Минимизация пробелов
+
+string Text_in_lower = Text_in.ToLower().Trim();
+
+string[] Poluchateli = System.IO.File.ReadAllLines(PathMappingPoluchatel); //Претензии\Системные файлы\Mapping\MappingPoluchatel.log
+ 
+ int countmax = 0;
+int prioritymax = 0;
+double wordmax = 0;
+
+string TopPoluchatel = "";
+
+foreach (string element in Poluchateli)
+{
+
+string temp_element =  System.Text.RegularExpressions.Regex.Replace(element, "СПЕЦИАЛИЗРОВАННЫЙ ЗАСТРОЙЩИК|C3", "СЗ", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   //Режем лишнее
+
+ temp_element =  System.Text.RegularExpressions.Regex.Replace(element, " +", " ", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+temp_element = temp_element.Trim();
+ double wordcount = (System.Text.RegularExpressions.Regex.Matches(element, " +").Count + 1);
+ 
+    int countp = 0;
+    int priority = 0;
+    double word = 0;
+ 
+  string s = Text_in_lower;
+
+  string[] subs = s.Split(' ');
+
+  foreach (var sub in subs)
+  {
+  
+double allwords = subs.Length;
+  
+  word = word+1;
+  
+  string tempsub = sub.ToLower().Trim(); 
+  
+  tempsub = System.Text.RegularExpressions.Regex.Replace(tempsub, "(е|ё)", "(е|ё)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   // замена Её
+  
+      if(tempsub.Length >= 2 && System.Text.RegularExpressions.Regex.IsMatch(temp_element.ToLower(), "(?<=^|[^А-Яа-яЁёA-Za-z])"+tempsub+"(?=[^А-Яа-яЁёA-Za-z]|$)"))
+      {
+      countp++;
+        if(System.Text.RegularExpressions.Regex.IsMatch(tempsub, "^сз$|^ао$|^ооо$|^оао$|^зао$|^фск$|^ип$"))
+    {
+     priority = priority + 1;
+     }
+     else
+  {
+          priority = priority + 5;
+              }
+      }
+      
+       TestPoluchatelTemp +=  tempsub +" | ";
+      
+  }       
+  
+    double wordtemp = (countp/wordcount);
+  
+  if(priority > prioritymax && countp > countmax && countp >= 2 && priority >= 6 && wordtemp > wordmax)
+  {
+    prioritymax = priority;
+    countmax = countp;
+    wordmax = wordtemp;
+    TopPoluchatel = element;
+    Poluchatel1C_ok = true;
+  }
+}
+
+Poluchatel1C = TopPoluchatel;
+}
+
+LTools.Workflow.PrimoApp.AddToLog(_Workflow, "OCR. Mapping", LTools.Enums.LogMessageType.Info);
+
+//Поиск получателя в 1С (MAPPING)
+
+if(true)
+{
+
+string Text_in = TempPoluchatel; // "фск Технологии";
+
+     Text_in =  System.Text.RegularExpressions.Regex.Replace(Text_in, "(?<=^|[^а-яА-ЯЁё])лсо(?=$|[^а-яА-ЯЁё])", "Лидер строительной отрасли", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   //Режем лишнее
+     Text_in =  System.Text.RegularExpressions.Regex.Replace(Text_in, "(?<=^|[^а-яА-ЯЁё])Финансово.строительная корпорация(?=$|[^а-яА-ЯЁё])", "ФСК", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   //Режем лишнее|
+     Text_in =  System.Text.RegularExpressions.Regex.Replace(Text_in, "(СЗ|C3|С3)", " СЗ ", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   //Режем лишнее|
+     Text_in =  System.Text.RegularExpressions.Regex.Replace(Text_in, "СПЕЦИАЛИЗИРОВАННЫЙ ЗАСТРОЙЩИК", " СЗ ", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   //Режем лишнее
+     Text_in =  System.Text.RegularExpressions.Regex.Replace(Text_in, "Судебная повестка по гражданскому делу|Судебная повестка по гражданскому|Судебная повестка", " ", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   //Режем лишнее|
+     Text_in =  System.Text.RegularExpressions.Regex.Replace(Text_in, "КиноДеволонмент", " КиноДеволопмент ", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   //Режем лишнее
+     Text_in =  System.Text.RegularExpressions.Regex.Replace(Text_in, "Арендное ремонтно.строительное предприятие", "АРСП", System.Text.RegularExpressions.RegexOptions.IgnoreCase);  
+     Text_in = Text_in .Replace("-"," "); // замена - на пробел
+     Text_in =  System.Text.RegularExpressions.Regex.Replace(Text_in, "[^А-Яа-яЁё0-9 ]+", " ", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   //Минимизация символов
+     Text_in =  System.Text.RegularExpressions.Regex.Replace(Text_in, " +", " ", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   //Минимизация пробелов
+
+string Text_in_lower = Text_in.ToLower().Trim();
+
+string[] Poluchateli = System.IO.File.ReadAllLines(PathMappingPoluchatel); //Претензии\Системные файлы\Mapping\MappingPoluchatel.log
+ 
+ int countmax = 0;
+int prioritymax = 0;
+double wordmax = 0;
+
+string TopPoluchatel = "";
+
+foreach (string element in Poluchateli)
+{
+
+string temp_element =  System.Text.RegularExpressions.Regex.Replace(element, "СПЕЦИАЛИЗРОВАННЫЙ ЗАСТРОЙЩИК|C3", "СЗ", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   //Режем лишнее
+
+ temp_element =  System.Text.RegularExpressions.Regex.Replace(element, " +", " ", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+temp_element = temp_element.Trim();
+ double wordcount = (System.Text.RegularExpressions.Regex.Matches(element, " +").Count + 1);
+ 
+    int countp = 0;
+    int priority = 0;
+    double word = 0;
+ 
+  string s = Text_in_lower;
+
+  string[] subs = s.Split(' ');
+
+  foreach (var sub in subs)
+  {
+  
+double allwords = subs.Length;
+  
+  word = word+1;
+  
+  string tempsub = sub.ToLower().Trim(); 
+  
+  tempsub = System.Text.RegularExpressions.Regex.Replace(tempsub, "(е|ё)", "(е|ё)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   // замена Её
+  
+      if(tempsub.Length >= 2 && System.Text.RegularExpressions.Regex.IsMatch(temp_element.ToLower(), "(?<=^|[^А-Яа-яЁёA-Za-z])"+tempsub+"(?=[^А-Яа-яЁёA-Za-z]|$)"))
+      {
+      countp++;
+        if(System.Text.RegularExpressions.Regex.IsMatch(tempsub, "^сз$|^ао$|^ооо$|^оао$|^зао$|^фск$|^ип$"))
+    {
+     priority = priority + 1;
+     }
+     else
+  {
+          priority = priority + 5;
+              }
+      }
+      
+       TestPoluchatelTemp +=  tempsub +" | ";
+      
+  }       
+  
+    double wordtemp = (countp/wordcount);
+  
+  if(priority > prioritymax && countp > countmax && countp >= 2 && priority >= 6 && wordtemp > wordmax)
+  {
+    prioritymax = priority;
+    countmax = countp;
+    wordmax = wordtemp;
+    TopPoluchatel = element;
+    Poluchatel1C_ok = true;
+  }
+}
+
+Poluchatel1C = TopPoluchatel;
+}
+
+//////////Поиск отправителя в 1С (MAPPING)
+
+if(true)
+{
+
+string Text_in = TempOtparvitel; // "фск Технологии";
+  Text_in = Text_in.Replace("-"," "); // замена - на пробел
+  Text_in =  System.Text.RegularExpressions.Regex.Replace(Text_in, "[^А-Яа-яЁё0-9 ]+", " ", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   //Минимизация символов
+  Text_in =  System.Text.RegularExpressions.Regex.Replace(Text_in, " +", " ", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   //Минимизация пробелов
+ 
+string Text_in_lower = Text_in.ToLower().Trim();
+Text_in_lower =  System.Text.RegularExpressions.Regex.Replace(Text_in_lower, "мещянск", "мещанск", System.Text.RegularExpressions.RegexOptions.IgnoreCase);  
+
+string[] Otpraviteli = System.IO.File.ReadAllLines(PathMappingOtpravitel);       // Претензии\Системные файлы\Mapping\MappingPoluchatel.log
+ 
+int countmax = 0;
+    int prioritymax = 0;
+       double wordmax = 0;
+string TopPoluchatel = "";
+
+foreach (string element in Otpraviteli)
+{
+string elementlower = element.ToLower();
+ double wordcount = (System.Text.RegularExpressions.Regex.Matches(element, " +").Count + 1);
+ 
+    int countp = 0;
+    int priority = 0;
+    double word = 0;
+ 
+  string s = Text_in_lower;
+
+  string[] subs = s.Split(' ');
+
+  foreach (var sub in subs)
+  {
+   
+double allwords = subs.Length; 
+  
+    word = word+1;
+  
+string tempsub = sub.ToLower();
+
+
+tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, "^суда$", "суд", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   
+tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, "ого$", "(ого|ий|ый)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   
+tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, "ий$", "(ого|ий|ый)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);  
+tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, "ый$", "(ого|ий|ый)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);  
+tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, "^города$", "(город|города|г\\.)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, @"^г$|^г\.$", "(город|города|г\\.)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);  
+tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, "москвы$", "(москва|москвы)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);  
+tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, "москва$", "(москва|москвы)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);  
+tempsub = System.Text.RegularExpressions.Regex.Replace(tempsub, "(е|ё)", "(е|ё)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   // замена Её
+
+ TestOtpravitelTemp += tempsub+ " | ";
+
+      if(tempsub.Length >= 2 && System.Text.RegularExpressions.Regex.IsMatch(element.ToLower(), "(?<=^|[^А-Яа-яЁёA-Za-z])"+tempsub.ToLower()+"(?=[^А-Яа-яЁёA-Za-z]|$)"))
+      {
+       countp++;
+  if(System.Text.RegularExpressions.Regex.IsMatch(tempsub, "^суд$|суда|судь|судебн|миров|участок|москв(а|ы)|московск|район|област|город|(<?=[^а-яА-ЯЁё]|^)г(?=[^а-яёa-zА-ЯA-ZЁ]|$)"))
+ {
+  priority = priority + 1;
+  }
+  else
+  {
+  priority = priority + 5;
+  }
+      }
+  }       
+  
+     double wordtemp = (countp/wordcount);
+    
+  if(element == "Головинский районный суд г. Москвы")    DebagPrintItteration += "вордтемп "+wordtemp+" вордмакс "+wordmax+" коунтмакс"+countp+ "приорити" + priority+"\r\n";
+  
+  if((priority > prioritymax && countp > countmax && countp >= 2 && priority >= 6 && wordtemp > wordmax) || Text_in_lower == elementlower)
+  {
+  
+  if(Text_in_lower == elementlower)
+  {
+  priority = 7;
+  countp = 7;
+  wordtemp = 7;
+  }
+  
+    
+    prioritymax = priority;
+    countmax = countp;
+    wordmax = wordtemp;
+    
+      DebagPrintItteration += "вордтемп "+wordtemp+" вордмакс "+wordmax+" коунтмакс"+countmax + "приорити" + prioritymax;
+    
+    TopPoluchatel = element;
+    Otpravitel1C_ok = true;
+    
+  }
+}
+
+Otpravitel1C = TopPoluchatel;
+
+}
