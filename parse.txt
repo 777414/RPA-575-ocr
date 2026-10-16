@@ -1,0 +1,511 @@
+LTools.Workflow.PrimoApp.AddToLog(_Workflow, "OCR. SearchData", LTools.Enums.LogMessageType.Info);
+
+string KtoObratilsya_Pattern =
+    @"(?:\bистец\b|\bзаявитель\b|\bобратился\b|\bв интересах\b)" +
+    @"\s*:?\s*" +
+    @"(?<fio>" +
+        @"[А-ЯЁ][а-яё-]{2,24}" +
+        @"\s+[А-ЯЁ][а-яё-]{2,24}" +
+        @"\s+[А-ЯЁ][а-яё-]{2,24}" +
+        @"(?:\s+(?:оглы|кызы)(?:-[А-Яа-яЁё-]{2,24})?)?" +
+    @")" +
+    @"(?=\s*(?:,|;|\bОТВЕТЧИК\b|\bответчик\b|$))";
+
+string PoIsku_Pattern =
+    @"\bпо\s+иску\s+" +
+    @"(?<fio>" +
+        @"[А-ЯЁ][а-яё-]{2,24}" +
+        @"(?:\s+[А-ЯЁ][а-яё-]{2,24}){1,2}" +
+        @"(?:\s+(?:оглы|кызы)(?:-[А-Яа-яЁё-]{2,24})?)?" +
+        @"(?:\s*,\s*" +
+            @"(?!\b(?:ответчик|ОТВЕТЧИК)\b)" +
+            @"[А-ЯЁ][а-яё-]{2,24}" +
+            @"(?:\s+[А-ЯЁ][а-яё-]{2,24}){1,2}" +
+            @"(?:\s+(?:оглы|кызы)(?:-[А-Яа-яЁё-]{2,24})?)?" +
+        @")*" +
+    @")" +
+    @"(?=\s+\bк\b)";
+
+string FioWithPatronymic_Pattern =
+    @"(?<fio>" +
+        @"[А-Яа-яЁё-]{3,24}" +
+        @"\s+[А-Яа-яЁё-]{3,24}" +
+        @"\s+[А-Яа-яЁё-]{3,24}(?:вич|вна|вича|вны)" +
+    @")";
+
+System.Text.RegularExpressions.Match m =
+    System.Text.RegularExpressions.Regex.Match(
+        GetText,
+        PoIsku_Pattern,
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+if (m.Success)
+{
+    KtoObratilsya = m.Groups["fio"].Value;
+}
+else
+{
+    m = System.Text.RegularExpressions.Regex.Match(
+        GetText,
+        KtoObratilsya_Pattern,
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    if (m.Success)
+    {
+        KtoObratilsya = m.Groups["fio"].Value;
+    }
+    else
+    {
+        m = System.Text.RegularExpressions.Regex.Match(
+            GetText,
+            FioWithPatronymic_Pattern,
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+        if (m.Success)
+        {
+            KtoObratilsya = m.Groups["fio"].Value;
+        }
+        else
+        {
+            KtoObratilsya = "";
+        }
+    }
+}
+
+KtoObratilsya = KtoObratilsya.Trim();
+
+if (System.Text.RegularExpressions.Regex.IsMatch(
+        KtoObratilsya,
+        "вича$",
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+{
+    KtoObratilsya =
+        System.Text.RegularExpressions.Regex.Replace(
+            KtoObratilsya,
+            @"(?<=^[А-Яа-яЁё-]{4,60})ого(?= |$)",
+            "ий",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    KtoObratilsya =
+        System.Text.RegularExpressions.Regex.Replace(
+            KtoObratilsya,
+            @"(?<=(^|[^А-Яа-яЁё])[А-Яа-яЁё-]{4,60})а(?= |$)",
+            "",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+}
+
+if (System.Text.RegularExpressions.Regex.IsMatch(
+        KtoObratilsya,
+        "вны$",
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+{
+    KtoObratilsya =
+        System.Text.RegularExpressions.Regex.Replace(
+            KtoObratilsya,
+            @"(?<=^[А-Яа-яЁё-]{4,60})ой(?= |$)",
+            "а",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+}
+
+KtoObratilsya = KtoObratilsya.Trim();
+
+
+if (System.Text.RegularExpressions.Regex.IsMatch(
+        KtoObratilsya,
+        "вича$",
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+{
+    KtoObratilsya =
+        System.Text.RegularExpressions.Regex.Replace(
+            KtoObratilsya,
+            @"(?<=^[А-Яа-яЁё-]{4,60})ого(?= |$)",
+            "ий",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    KtoObratilsya =
+        System.Text.RegularExpressions.Regex.Replace(
+            KtoObratilsya,
+            @"(?<=(^|[^А-Яа-яЁё])[А-Яа-яЁё-]{4,60})а(?= |$)",
+            "",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+}
+
+if (System.Text.RegularExpressions.Regex.IsMatch(
+        KtoObratilsya,
+        "вны$",
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+{
+    KtoObratilsya =
+        System.Text.RegularExpressions.Regex.Replace(
+            KtoObratilsya,
+            @"(?<=^[А-Яа-яЁё-]{4,60})ой(?= |$)",
+            "а",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+}
+
+KtoObratilsya = KtoObratilsya.Trim();
+
+////////////////////////////////////////////////////////////////////////Парсинг обращения дата
+
+string ObrashenieDate_Pattern =
+    @"(?<!.{1,3}ОГРН.{1,3})((([0-9]{1,2}( +|)((Я|я)нвар.|ЯНВАР.|(Ф|ф)еврал.|ФЕВРАЛ.|(М|м)арт(|.)|МАРТ(|.)|(А|а)прель|АПРЕЛЬ|(М|м)а(й|я)|МА(Й|Я)|(И|и)юн.|ИЮН.|(И|и)юл.|ИЮЛ.|(А|а)вгуст(|.)|АВГУСТ(|.)|(С|с)ентябр.|СЕНТЯБР.|(О|о)ктябр.|ОКТЯБР.|(Н|н)оябр.|НОЯБР.|(Д|д)екабр.|ДЕКАБР.)( +|)20[0-9]{2}))|([0-9]{1,2}([ .]{1,3})[0-9]{1,2}([ .]{1,3})20[0-9]{2}))";
+
+if (System.Text.RegularExpressions.Regex.IsMatch(
+        GetText,
+        ObrashenieDate_Pattern,
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+{
+    System.Text.RegularExpressions.Match m =
+        System.Text.RegularExpressions.Regex.Match(
+            GetText,
+            ObrashenieDate_Pattern,
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    if (m.Success)
+        ObrashenieDate = m.Value;
+    else
+        ObrashenieDate = "";
+
+    ObrashenieDate = ObrashenieDate.Trim();
+}
+else
+{
+    ObrashenieDate = "";
+}
+
+////////////////////////////////////////////////////////////////////////Парсинг отправителя
+
+string Otpravitel_Pattern =
+    "(^|)[А-Яа-яЁё. -]+(районный|городской|областной|мировой|арбитражный|верховный)( +)(СУД|Суд|суд)( +)[А-Яа-яЁё. -]+|(?<=решение( |:))[А-Яа-яЁё. -]{5,45}(СУД|суд|Суд)[А-Яа-яЁё. -]{5,45}(?=От|от|ОТ)";
+
+if (System.Text.RegularExpressions.Regex.IsMatch(
+        GetText,
+        Otpravitel_Pattern,
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+{
+    System.Text.RegularExpressions.Match m =
+        System.Text.RegularExpressions.Regex.Match(
+            GetText,
+            Otpravitel_Pattern,
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    if (m.Success)
+        Otpravitel = m.Value;
+    else
+        Otpravitel = "";
+
+    Otpravitel = Otpravitel.Trim();
+    Otpravitel = System.Text.RegularExpressions.Regex.Replace(Otpravitel, "^.( )+", "");
+    Otpravitel = System.Text.RegularExpressions.Regex.Replace(Otpravitel, @"\\", "");
+    Otpravitel = System.Text.RegularExpressions.Regex.Replace(
+        Otpravitel,
+        @"КОПИЯ|КОПИИ|Копия|Копии|копии|копия|через|кому|куда",
+        "",
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+    Otpravitel = System.Text.RegularExpressions.Regex.Replace(Otpravitel, "(?<=»).+", "");
+    Otpravitel = System.Text.RegularExpressions.Regex.Replace(
+        Otpravitel,
+        "года|в составе(.+|$)",
+        "",
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+    Otpravitel = System.Text.RegularExpressions.Regex.Replace(
+        Otpravitel,
+        "(?<=.+суд.+(области|города|городской|областной)).+$",
+        "",
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+    Otpravitel = System.Text.RegularExpressions.Regex.Replace(
+        Otpravitel,
+        "(?<=.+(области|города|городской|областной).+суд).+$",
+        "",
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+    Otpravitel = System.Text.RegularExpressions.Regex.Replace(
+        Otpravitel,
+        "Российская Федерация",
+        "",
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+    Otpravitel = Otpravitel.Trim();
+}
+else
+{
+    Otpravitel = "";
+}
+
+string TempOtpravitel2 = "";
+
+string Otpravitel2 = "";
+bool Otpravitel2CourtFound = false;
+string Otpravitel2Court_Pattern =
+    @"(?:[А-ЯЁ][а-яё.-]*|[А-ЯЁ]{2,})\s+(?i:районный|городской|областной|мировой|арбитражный|верховный)\s+(?i:суд)(?i:а)?(?:\s+(?i:города|г\.)\s*[А-ЯЁа-яё-]+)?|(?i:арбитражный|верховный)\s+(?i:суд)(?i:а)?(?:\s+[А-ЯЁа-яё-]+)?";
+
+System.Text.RegularExpressions.MatchCollection Otpravitel2Court_Matches =
+    System.Text.RegularExpressions.Regex.Matches(
+        ShortTempTextOriginalEnd,
+        Otpravitel2Court_Pattern);
+
+if (Otpravitel2Court_Matches.Count > 0)
+{
+    Otpravitel2 = Otpravitel2Court_Matches[Otpravitel2Court_Matches.Count - 1].Value;
+    Otpravitel2CourtFound = true;
+}
+else
+{
+    string Otpravitel2_Pattern =
+        @"(?<=(pochta\.ru|POCHTA\.RU)( +|))[А-Я][А-Яа-яёЁ\.»""« -]+(?=[0-9]{6}, ?(г|Г)?)|(?<=от кого([^А-Яа-яЁё]+))[А-Я][А-Яа-яЁё\.»""« -]+(?=откуда)|(?<=pochta.ru[^А-Яа-яЁё]+)[А-Яа-яЁё-]+ [А-Яа-яЁё-]+ [А-Яа-яЁё-]+(вич|вна|вны)";
+
+    if (System.Text.RegularExpressions.Regex.IsMatch(
+            ShortTempTextOriginalEnd,
+            Otpravitel2_Pattern,
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+    {
+        System.Text.RegularExpressions.Match m =
+            System.Text.RegularExpressions.Regex.Match(
+                ShortTempTextOriginalEnd,
+                Otpravitel2_Pattern,
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+        if (m.Success)
+            Otpravitel2 = m.Value;
+        else
+            Otpravitel2 = "";
+    }
+    else
+    {
+        Otpravitel2 = "";
+    }
+}
+
+Otpravitel2 = Otpravitel2.Trim();
+
+if (!Otpravitel2CourtFound)
+{
+    Otpravitel2 = System.Text.RegularExpressions.Regex.Replace(Otpravitel2, "^.( )+", "");
+    Otpravitel2 = System.Text.RegularExpressions.Regex.Replace(Otpravitel2, @"\\", "");
+    Otpravitel2 = System.Text.RegularExpressions.Regex.Replace(
+        Otpravitel2,
+        @"КОПИЯ|КОПИИ|Копия|Копии|копии|копия|через|кому|куда",
+        "",
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+    Otpravitel2 = System.Text.RegularExpressions.Regex.Replace(Otpravitel2, "(?<=»).+", "");
+    Otpravitel2 = System.Text.RegularExpressions.Regex.Replace(
+        Otpravitel2,
+        "года|в составе(.+|$)",
+        "",
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+    Otpravitel2 = System.Text.RegularExpressions.Regex.Replace(
+        Otpravitel2,
+        "(?<=.+суд.+(области|города|городской|областной)).+$",
+        "",
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+    Otpravitel2 = System.Text.RegularExpressions.Regex.Replace(
+        Otpravitel2,
+        "(?<=.+(области|города|городской|областной).+суд).+$",
+        "",
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    Otpravitel2 = Otpravitel2.Trim();
+}
+
+string TempOCR = Otpravitel2;
+bool TempIsFIO = false;
+string Otpravitel2FIO = "";
+
+TempOCR = TempOCR.Trim();
+
+if (TempOCR != "")
+{
+    string FIOPattern =
+        @"^[А-ЯЁ][а-яё]{2,30} [А-ЯЁ][а-яё]{2,30} [А-ЯЁ][а-яё]{2,30}(вич|вна|ВИЧ|ВНА)?( [А-Яа-яЁё]{2,8}(ы|(Л|З)Ы|(Л|З)У|(л|з)у))?" +
+        @"|^[А-ЯЁа-яё]{2,30} [А-ЯЁа-яё]{2,30} [А-ЯЁа-яё]{2,30}(вич|вна|ВИЧ|ВНА|( [А-Яа-яЁё]{2,8}(ы|(Л|З)Ы|(Л|З)У|(л|з)у)))" +
+        @"|^[А-ЯЁа-яё]{2,30} [А-ЯЁа-яё]{2,30} [А-ЯЁа-яё]{2,30}(вич|вна|ВИЧ|ВНА)$";
+
+    if (System.Text.RegularExpressions.Regex.IsMatch(TempOCR, FIOPattern))
+    {
+        System.Text.RegularExpressions.Match m =
+            System.Text.RegularExpressions.Regex.Match(
+                TempOCR,
+                FIOPattern);
+
+        if (m.Success)
+            TempOtpravitel2 = m.Value;
+        else
+            TempOtpravitel2 = "";
+
+        TempOtpravitel2 = TempOtpravitel2.Trim();
+
+        System.Globalization.TextInfo textInfo =
+            new System.Globalization.CultureInfo("ru-RU", false).TextInfo;
+
+        TempOtpravitel2 =
+            textInfo.ToTitleCase(TempOtpravitel2.ToLower());
+
+        TempIsFIO = true;
+    }
+    else
+    {
+        TempOtpravitel2 = TempOCR;
+    }
+}
+
+Otpravitel2FIO = TempOtpravitel2;
+IsFIO = TempIsFIO;
+
+if (Otpravitel2 != "")
+    Otpravitel = Otpravitel2;
+
+//////////////////////////////////////////////////////////////////////////////////
+
+string Poluchatel_Pattern =
+    @"((?<=.+(тветчик(и|)(:|)|кому|олучател(ь|и)(:|)|).+)((ООО|(?<=^|[^0-9]+)000)[\\""« -]+|[\\»""« -]+|)(C3|С3|СЗ|Специализированный (з|З)астройщик|СПЕЦИАЛИЗИРОВАННЫЙ ЗАСТРОЙЩИК)[\\ А-Яа-яЁё»""«-]+(?=[^А-ЯЁёа-я0-9]|судебная|адр|Адр|АДР|[0-9]{4,}))|((СЗ|C3|С3|СПЕЦИАЛИЗИРОВАННЫЙ ЗАСТРОЙЩИК|(ООО +(.) +|)(ФСК|((Федеральная|Финансов(о|ая)).строительная (компания|корпорация))))[\\ А-Яа-яЁё""«-]{5,}(?=[^А-ЯЁёа-я0-9]|» |адр|(С|с)удебная|Адр|АДР|[0-9]{4,}))|(((?<=Кому[0-9А-Яа-яЁё,. -]+))((ООО|OOO|(?<=^|[^0-9]+)000|СПЕЦИАЛИЗИРОВАННЫЙ ЗАСТРОЙЩИК|СЗ)([\\"" «]+|)[а-яА-ЯЁё \\""-]+)(?=(С|с)удебная|[^А-ЯЁёа-я0-9]|» | \\"" | "" |адр|(С|с)удебная|Адр|АДР|[0-9]{4,}))|(((ООО|OOO|(?<=^|[^0-9]+)000|СПЕЦИАЛИЗИРОВАННЫЙ ЗАСТРОЙЩИК|СЗ)([\\"" «]+|)[а-яА-ЯЁё \\""«-]+)(?=(С|с)удебная|[^А-ЯЁёа-я0-9]|» | \\"" | "" |адр|(С|с)удебная|Адр|АДР|[0-9]{4,}))";
+
+if (System.Text.RegularExpressions.Regex.IsMatch(
+        GetText,
+        Poluchatel_Pattern,
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+{
+    System.Text.RegularExpressions.Match m =
+        System.Text.RegularExpressions.Regex.Match(
+            GetText,
+            Poluchatel_Pattern,
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    if (m.Success)
+        Poluchatel = m.Value;
+    else
+        Poluchatel = "";
+
+    Poluchatel = Poluchatel.Trim();
+    Poluchatel = System.Text.RegularExpressions.Regex.Replace(Poluchatel, @"\\", "");
+    Poluchatel = System.Text.RegularExpressions.Regex.Replace(
+        Poluchatel,
+        @"КОПИЯ|КОПИИ|Копия|Копии|копии|копия",
+        "");
+    Poluchatel = System.Text.RegularExpressions.Regex.Replace(Poluchatel, "(?<=»).+", "");
+    Poluchatel = System.Text.RegularExpressions.Regex.Replace(
+        Poluchatel,
+        "^.+(о взыскании)( с)?(?=( +)?ООО|ооо|СЗ|сз)",
+        "");
+}
+else
+{
+    Poluchatel = "";
+}
+
+///////////Парсинг номер дела
+
+string NomerDela_Pattern =
+    @"(?<=(№|дело)( |))[ А-Яа-яеЁ0-9-\\/]+\/([а-яА-ЯЁЁ0-9-]{1,4})";
+
+if (System.Text.RegularExpressions.Regex.IsMatch(
+        GetText,
+        NomerDela_Pattern,
+        System.Text.RegularExpressions.RegexOptions.IgnoreCase))
+{
+    System.Text.RegularExpressions.Match m =
+        System.Text.RegularExpressions.Regex.Match(
+            GetText,
+            NomerDela_Pattern,
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    if (m.Success)
+        NomerDela = m.Value;
+    else
+        NomerDela = "";
+
+    NomerDela = NomerDela.Trim();
+}
+else
+{
+    NomerDela = "";
+}
+
+////////////Парсинг для 1с
+
+TempOtparvitel = Otpravitel;
+TempPoluchatel = Poluchatel;
+
+//////////Чистка общих символов
+
+if (true)
+{
+    TempOtparvitel =
+        System.Text.RegularExpressions.Regex.Replace(
+            TempOtparvitel,
+            "000",
+            "ООО",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    TempPoluchatel =
+        System.Text.RegularExpressions.Regex.Replace(
+            TempPoluchatel,
+            "000",
+            "OOO",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    TempOtparvitel =
+        System.Text.RegularExpressions.Regex.Replace(
+            TempOtparvitel,
+            "СПЕЦИАЛИЗРОВАННЫЙ ЗАСТРОЙЩИК|C3",
+            "СЗ",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    TempPoluchatel =
+        System.Text.RegularExpressions.Regex.Replace(
+            TempPoluchatel,
+            "СПЕЦИАЛИЗРОВАННЫЙ ЗАСТРОЙЩИК|C3",
+            "СЗ",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    TempOtparvitel =
+        System.Text.RegularExpressions.Regex.Replace(
+            TempOtparvitel,
+            "[^А-Яа-яЁё -]+",
+            " ",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    TempPoluchatel =
+        System.Text.RegularExpressions.Regex.Replace(
+            TempPoluchatel,
+            "[^А-Яа-яЁё -]+",
+            " ",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    TempOtparvitel =
+        System.Text.RegularExpressions.Regex.Replace(
+            TempOtparvitel,
+            " +",
+            " ",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    TempPoluchatel =
+        System.Text.RegularExpressions.Regex.Replace(
+            TempPoluchatel,
+            " +",
+            " ",
+            System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+    TempOtparvitel = TempOtparvitel.Trim();
+    TempPoluchatel = TempPoluchatel.Trim();
+
+    TempOtparvitelLower = TempOtparvitel.ToUpper();
+    TempPoluchatelLower = TempPoluchatel.ToUpper();
+
+    if (System.Text.RegularExpressions.Regex.IsMatch(
+            TempOtparvitelLower,
+            "АРБИТРАЖ") &&
+        System.Text.RegularExpressions.Regex.IsMatch(
+            TempOtparvitelLower,
+            "МОСКВ"))
+    {
+        TempOtparvitel = "АРБИТРАЖНЫЙ СУД Г.МОСКВЫ";
+    }
+
+    if (System.Text.RegularExpressions.Regex.IsMatch(
+            TempPoluchatelLower,
+            "КИНО") &&
+        System.Text.RegularExpressions.Regex.IsMatch(
+            TempPoluchatelLower,
+            "ДЕВЕЛОПМЕНТ"))
+    {
+        TempPoluchatel = "СЗ КиноДевелопмент ООО";
+    }
+}
