@@ -201,6 +201,32 @@ string TopPoluchatel = "";
 foreach (string element in Otpraviteli)
 {
 string elementlower = element.ToLower();
+
+// Проверяем тип суда, чтобы не подменять областной суд районным и наоборот.
+bool tipSudaMismatch = false;
+
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bрайонный\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bрайонный\b"))
+    tipSudaMismatch = true;
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bобластной\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bобластной\b"))
+    tipSudaMismatch = true;
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bгородской\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bгородской\b"))
+    tipSudaMismatch = true;
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bкраевой\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bкраевой\b"))
+    tipSudaMismatch = true;
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bарбитражный\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bарбитражный\b"))
+    tipSudaMismatch = true;
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bмировой\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bмировой\b"))
+    tipSudaMismatch = true;
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bверховный\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bверховный\b"))
+    tipSudaMismatch = true;
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bкассационный\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bкассационный\b"))
+    tipSudaMismatch = true;
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bапелляционный\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bапелляционный\b"))
+    tipSudaMismatch = true;
+
+if (tipSudaMismatch)
+    continue;
+
  double wordcount = (System.Text.RegularExpressions.Regex.Matches(element, " +").Count + 1);
  
     int countp = 0;
