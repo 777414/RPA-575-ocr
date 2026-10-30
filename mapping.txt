@@ -207,9 +207,9 @@ bool tipSudaMismatch = false;
 
 if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bрайонн(?:ый|ого)\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bрайонн(?:ый|ого)\b"))
     tipSudaMismatch = true;
-if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bобластн(?:ый|ого)\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bобластн(?:ый|ого)\b"))
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bобластн(?:ой|ого|ый)\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bобластн(?:ой|ого|ый)\b"))
     tipSudaMismatch = true;
-if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bгородск(?:ой|ого)\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bгородск(?:ий|ого)\b"))
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bгородск(?:ой|ого|ий)\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bгородск(?:ой|ого|ий)\b"))
     tipSudaMismatch = true;
 if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bкраев(?:ой|ого)\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bкраев(?:ой|ого)\b"))
     tipSudaMismatch = true;
