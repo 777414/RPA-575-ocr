@@ -213,7 +213,7 @@ if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bгородс
     tipSudaMismatch = true;
 if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bкраев(?:ой|ого)\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bкраев(?:ой|ого)\b"))
     tipSudaMismatch = true;
-if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\барбитражн(?:ый|ого)\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\барбитражн(?:ый|ого)\b"))
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bарбитражн(?:ый|ого)\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bарбитражн(?:ый|ого)\b"))
     tipSudaMismatch = true;
 if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bмиров(?:ой|ого)\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bмиров(?:ой|ого)\b"))
     tipSudaMismatch = true;
