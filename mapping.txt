@@ -263,7 +263,7 @@ tempsub = System.Text.RegularExpressions.Regex.Replace(tempsub, "(е|ё)", "(е|
       if(tempsub.Length >= 2 && System.Text.RegularExpressions.Regex.IsMatch(element.ToLower(), "(?<=^|[^А-Яа-яЁёA-Za-z])"+tempsub.ToLower()+"(?=[^А-Яа-яЁёA-Za-z]|$)"))
       {
        countp++;
-  if(System.Text.RegularExpressions.Regex.IsMatch(tempsub, "^суд$|суда|судь|судебн|миров|участок|москв(а|ы)|московск|район|област|город|(?<![а-яА-ЯЁё])г(?=[^а-яёa-zА-ЯA-ZЁ]|$)"))
+  if(System.Text.RegularExpressions.Regex.IsMatch(tempsub, "^суд$|суда|судь|судебн|миров|участок|москв(а|ы)|район|област|город|(?<![а-яА-ЯЁё])г(?=[^а-яёa-zА-ЯA-ZЁ]|$)"))
  {
   priority = priority + 1;
   }
