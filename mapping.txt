@@ -45,7 +45,7 @@ temp_element = temp_element.Trim();
 
   string[] subs = s.Split(' ');
 
-  foreach (var sub in subs)
+  foreach (string sub in subs)
   {
   
 double allwords = subs.Length;
@@ -135,7 +135,7 @@ temp_element = temp_element.Trim();
 
   string[] subs = s.Split(' ');
 
-  foreach (var sub in subs)
+  foreach (string sub in subs)
   {
   
 double allwords = subs.Length;
@@ -237,7 +237,7 @@ if (tipSudaMismatch)
 
   string[] subs = s.Split(' ');
 
-  foreach (var sub in subs)
+  foreach (string sub in subs)
   {
    
 double allwords = subs.Length; 
