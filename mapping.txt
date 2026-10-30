@@ -205,23 +205,23 @@ string elementlower = element.ToLower();
 // Проверяем тип суда, чтобы не подменять областной суд районным и наоборот.
 bool tipSudaMismatch = false;
 
-if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bрайонный\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bрайонный\b"))
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bрайонн(?:ый|ого)\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bрайонн(?:ый|ого)\b"))
     tipSudaMismatch = true;
-if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bобластной\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bобластной\b"))
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bобластн(?:ый|ого)\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bобластн(?:ый|ого)\b"))
     tipSudaMismatch = true;
-if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bгородской\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bгородской\b"))
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bгородск(?:ий|ого)\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bгородск(?:ий|ого)\b"))
     tipSudaMismatch = true;
-if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bкраевой\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bкраевой\b"))
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bкраев(?:ой|ого)\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bкраев(?:ой|ого)\b"))
     tipSudaMismatch = true;
-if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bарбитражный\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bарбитражный\b"))
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\барбитражн(?:ый|ого)\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\барбитражн(?:ый|ого)\b"))
     tipSudaMismatch = true;
-if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bмировой\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bмировой\b"))
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bмиров(?:ой|ого)\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bмиров(?:ой|ого)\b"))
     tipSudaMismatch = true;
-if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bверховный\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bверховный\b"))
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bверховн(?:ый|ого)\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bверховн(?:ый|ого)\b"))
     tipSudaMismatch = true;
-if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bкассационный\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bкассационный\b"))
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bкассационн(?:ый|ого)\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bкассационн(?:ый|ого)\b"))
     tipSudaMismatch = true;
-if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bапелляционный\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bапелляционный\b"))
+if (System.Text.RegularExpressions.Regex.IsMatch(Text_in_lower, @"\bапелляционн(?:ый|ого)\b") && !System.Text.RegularExpressions.Regex.IsMatch(elementlower, @"\bапелляционн(?:ый|ого)\b"))
     tipSudaMismatch = true;
 
 if (tipSudaMismatch)
