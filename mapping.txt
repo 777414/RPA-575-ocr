@@ -246,6 +246,11 @@ double allwords = subs.Length;
   
 string tempsub = sub.ToLower();
 
+tempsub = System.Text.RegularExpressions.Regex.Replace(
+    tempsub,
+    "^десятыи$",
+    "десятый",
+    System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 
 tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, "^суда$", "суд", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   
 tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, "ого$", "(ого|ий|ый|ой)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   
