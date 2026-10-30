@@ -248,9 +248,10 @@ string tempsub = sub.ToLower();
 
 
 tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, "^суда$", "суд", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   
-tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, "ого$", "(ого|ий|ый)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   
-tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, "ий$", "(ого|ий|ый)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);  
-tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, "ый$", "(ого|ий|ый)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);  
+tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, "ого$", "(ого|ий|ый|ой)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);   
+tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, "ий$", "(ого|ий|ый|ой)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);  
+tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, "ый$", "(ого|ий|ый|ой)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+ tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, "ой$", "(ого|ой|ый|ий)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);  
 tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, "^города$", "(город|города|г\\.)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
 tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, @"^г$|^г\.$", "(город|города|г\\.)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);  
 tempsub  =  System.Text.RegularExpressions.Regex.Replace(tempsub, "москвы$", "(москва|москвы)", System.Text.RegularExpressions.RegexOptions.IgnoreCase);  
